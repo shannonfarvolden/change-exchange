@@ -27,12 +27,6 @@ public class UserDao {
         return userDao;
     }
 
-    public Iterable<String> getUsernames() {
-        return users.stream()
-                .map(user -> user.getName())
-                .collect(Collectors.toList());
-    }
-
     public Optional<User> getUser(int id) {
         return users.stream()
                 .filter(user -> user.getId() == id)
