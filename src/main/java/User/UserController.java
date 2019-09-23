@@ -6,15 +6,16 @@ import java.util.Objects;
 
 public class UserController {
 
-    public static Handler fetchAllUsernames = ctx -> {
-        UserDao dao = UserDao.instance();
-        Iterable<String> allUsers = dao.getAllUsernames();
+    public static UserDao dao = UserDao.instance();
+
+    public static Handler getUsernames = ctx -> {
+        Iterable<String> allUsers = dao.getUsernames();
         ctx.json(allUsers);
     };
 
-    public static Handler fetchById = ctx -> {
+    public static Handler getUser = ctx -> {
         int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-        User user = findUser(id);
+        User user = dao.getUser(id).orElseThrow(() -> new Exception("Unable to find user id" + id));
         if (user == null) {
             ctx.html("Not Found");
         } else {
@@ -23,18 +24,15 @@ public class UserController {
     };
 
     public static Handler postTransfer = ctx -> {
-        User fromUser = findUser(Integer.parseInt(ctx.formParam("fromUserId")));
-        User toUser = findUser(Integer.parseInt(ctx.formParam("toUserId")));
+        int fromUserId = Integer.parseInt(ctx.formParam("fromUserId"));
+        int toUserId = (Integer.parseInt(ctx.formParam("toUserId")));
+
+        User fromUser = dao.getUser(fromUserId).orElseThrow(() -> new Exception("Unable to find user id" + fromUserId));
+        User toUser = dao.getUser(toUserId).orElseThrow(() -> new Exception("Unable to find user id" + toUserId));
         int amount = Integer.parseInt(ctx.formParam("amount"));
         toUser.transfer(fromUser, amount);
 
-        ctx.html(String.format("Transfer Complete. %s sent %s amount of £%d. %s new balance is %d.", fromUser.getName(), toUser.getName(), amount, toUser.getName(), toUser.getBalance()));
+        ctx.html(String.format("Transfer Complete. %s sent %s amount of £%d. %s new balance is £%d.", fromUser.getName(), toUser.getName(), amount, toUser.getName(), toUser.getBalance()));
     };
-
-    private static User findUser(int id) throws Exception {
-        UserDao dao = UserDao.instance();
-        return dao.getUserById(id).orElseThrow(() -> new Exception("Unable to find user id" + id));
-
-    }
 
 }

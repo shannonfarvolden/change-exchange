@@ -20,22 +20,22 @@ public class UserDao {
     private UserDao() {
     }
 
-    static UserDao instance() {
+    public static UserDao instance() {
         if (userDao == null) {
             userDao = new UserDao();
         }
         return userDao;
     }
 
-    Iterable<String> getAllUsernames() {
+    public Iterable<String> getUsernames() {
         return users.stream()
                 .map(user -> user.getName())
                 .collect(Collectors.toList());
     }
 
-    Optional<User> getUserById(int id) {
+    public Optional<User> getUser(int id) {
         return users.stream()
-                .filter(u -> u.getId() == id)
+                .filter(user -> user.getId() == id)
                 .findAny();
     }
 
