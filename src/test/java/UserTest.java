@@ -1,9 +1,10 @@
-import User.*;
+import User.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
 public class UserTest {
 
     User user1;
@@ -24,6 +25,12 @@ public class UserTest {
         assertEquals(5, user2.getBalance());
 
     }
+
+    @Test(expected = Exception.class)
+    public void exceptionThrownWhenUserHasInsufficientFunds() throws Exception{
+        user1.transfer(user2, 15);
+    }
+
 
     @After
     public void tearDown(){

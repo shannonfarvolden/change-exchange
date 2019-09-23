@@ -45,7 +45,7 @@ public class User {
     }
 
     public boolean hasSufficientBalance(int transferAmount){
-        return (balance - transferAmount) > 0;
+        return (balance - transferAmount) >= 0;
     }
 
 }
