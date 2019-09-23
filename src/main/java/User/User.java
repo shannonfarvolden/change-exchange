@@ -12,6 +12,12 @@ public class User {
         this.name = name;
     }
 
+    public User(int id, String name, int balance){
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+    }
+
     public int getId() {
         return id;
     }
@@ -24,8 +30,22 @@ public class User {
         return balance;
     }
 
-    public void setBalance(int balance) {
-        this.balance = balance;
+    public void setBalance(int amount) {
+        this.balance = balance + amount;
+    }
+
+
+    public void transfer(User user, int amount) throws Exception{
+        if (!user.hasSufficientBalance(amount)) {
+            throw new Exception("Balance not sufficient");
+        }
+
+        user.setBalance(-amount);
+        this.setBalance(amount);
+    }
+
+    public boolean hasSufficientBalance(int transferAmount){
+        return (balance - transferAmount) > 0;
     }
 
 }
